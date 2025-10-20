@@ -57,10 +57,15 @@
   min-height: 3rem;
 }
 
-.row:not(:last-of-type) {
+.row:not(:last-of-type),
+fieldset {
   padding-bottom: 16px;
   border-bottom: 1px dotted hsl(250deg 80% 80% / 0.5);
   margin-bottom: 16px;
+}
+
+legend {
+  float: inline-start;
 }
 
 .titleMessageWrapper {
@@ -91,11 +96,12 @@
 .radioWrapper {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 16px;
+  gap: 4px 24px;
 }
 
 .radioWrapper label {
   display: flex;
+  flex: 0;
   align-items: center;
   gap: 8px;
   width: 100px;

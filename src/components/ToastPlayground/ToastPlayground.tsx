@@ -1,12 +1,19 @@
 import React from 'react';
 
+import useControlInput from '@/hooks/useControlInput';
+
 import Button from '../Button';
+import TextArea from '../TextArea';
+import RadioInput from '../RadioInput';
 
 import styles from './ToastPlayground.module.css';
 
 const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 
 function ToastPlayground() {
+  const [isChecked, toggleChecked] = useControlInput();
+  const [message, updateMessage] = useControlInput();
+
   return (
     <div className={styles.wrapper}>
       <header>
@@ -14,9 +21,14 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      <div className={styles.controlsWrapper}>
+      <form 
+        className={styles.controlsWrapper}
+        onSubmit={(event) => {
+          event.preventDefault();
+        }}
+      >
         <div className={styles.row}>
-          <label
+          {/* <label
             htmlFor="message"
             className={styles.label}
             style={{ alignSelf: 'baseline' }}
@@ -25,27 +37,28 @@ function ToastPlayground() {
           </label>
           <div className={styles.inputWrapper}>
             <textarea id="message" className={styles.messageInput} />
-          </div>
+          </div> */}
+          <TextArea message={message} updateMessage={updateMessage} />
         </div>
 
-        <div className={styles.row}>
-          <div className={styles.label}>Variant</div>
+        <fieldset className={styles.row}>
+          <legend className={styles.label}>Variant</legend>
           <div
             className={`${styles.inputWrapper} ${styles.radioWrapper}`}
           >
-            <label htmlFor="variant-notice">
-              <input
-                id="variant-notice"
-                type="radio"
-                name="variant"
-                value="notice"
-              />
-              notice
-            </label>
-
-            {/* TODO Other Variant radio buttons here */}
+            {VARIANT_OPTIONS.map((option) => {
+              return (
+                <RadioInput 
+                  key={option} 
+                  option={option} 
+                  isChecked={isChecked} 
+                  toggleInput={toggleChecked} 
+                  name="toast-variants" 
+                />
+              );
+            })}
           </div>
-        </div>
+        </fieldset>
 
         <div className={styles.row}>
           <div className={styles.label} />
@@ -55,7 +68,7 @@ function ToastPlayground() {
             <Button>Pop Toast!</Button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
