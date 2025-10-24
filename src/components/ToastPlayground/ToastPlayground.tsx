@@ -5,14 +5,16 @@ import useControlInput from '@/hooks/useControlInput';
 import Button from '../Button';
 import TextArea from '../TextArea';
 import RadioInput from '../RadioInput';
+import Toast from '../Toast/Toast';
 
 import styles from './ToastPlayground.module.css';
 
 const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 
 function ToastPlayground() {
-  const [isChecked, toggleChecked] = useControlInput();
+  const [checkedValue, toggleChecked] = useControlInput();
   const [message, updateMessage] = useControlInput();
+  const [isToastOpen, setIsToastOpen] = React.useState(false);
 
   return (
     <div className={styles.wrapper}>
@@ -21,23 +23,23 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
+      {isToastOpen && (
+        <Toast 
+          message={message} 
+          status={checkedValue} 
+          isOpen={isToastOpen} 
+          toggleIsOpen={setIsToastOpen} 
+        />
+      )}
+
       <form 
         className={styles.controlsWrapper}
         onSubmit={(event) => {
           event.preventDefault();
+          setIsToastOpen(!isToastOpen);
         }}
       >
         <div className={styles.row}>
-          {/* <label
-            htmlFor="message"
-            className={styles.label}
-            style={{ alignSelf: 'baseline' }}
-          >
-            Message
-          </label>
-          <div className={styles.inputWrapper}>
-            <textarea id="message" className={styles.messageInput} />
-          </div> */}
           <TextArea message={message} updateMessage={updateMessage} />
         </div>
 
@@ -51,7 +53,7 @@ function ToastPlayground() {
                 <RadioInput 
                   key={option} 
                   option={option} 
-                  isChecked={isChecked} 
+                  isChecked={checkedValue} 
                   toggleInput={toggleChecked} 
                   name="toast-variants" 
                 />
