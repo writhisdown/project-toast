@@ -1,7 +1,7 @@
 import React from 'react';
 
-function useControlInput() {
-  const [inputValue, setInputValue] = React.useState<string | undefined>('');
+function useControlInput(initialValue: string = '') {
+  const [inputValue, setInputValue] = React.useState<string | undefined>(initialValue);
 
   const toggleValue = React.useCallback((event: React.ChangeEvent | undefined) => {
     const element = event?.target as HTMLInputElement;
@@ -9,7 +9,11 @@ function useControlInput() {
     setInputValue(value);
   }, []);
 
-  return [inputValue, toggleValue] as const;
+  const reset = React.useCallback(() => {
+    setInputValue(initialValue);
+  }, []);
+
+  return [inputValue, toggleValue, reset] as const;
 }
 
 export default useControlInput;

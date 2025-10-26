@@ -6,7 +6,7 @@ type SVGComponent = {
 
 function ToastIcon({icon: Icon} : SVGComponent) {
   return (
-    <Icon size={24} />
+    <Icon size={24} aria-hidden="true" />
   );
 }
 

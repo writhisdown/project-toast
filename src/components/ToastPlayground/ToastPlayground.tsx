@@ -1,20 +1,44 @@
 import React from 'react';
 
+import type { ToastList } from '@/types/ToastTypes';
+
 import useControlInput from '@/hooks/useControlInput';
 
 import Button from '../Button';
 import TextArea from '../TextArea';
 import RadioInput from '../RadioInput';
-import Toast from '../Toast/Toast';
+import ToastShelf from '../ToastShelf';
 
 import styles from './ToastPlayground.module.css';
 
 const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 
+// type Toasts = {
+//   id: string,
+//   message: string | undefined,
+//   variant: string | undefined,
+// }
+
 function ToastPlayground() {
-  const [checkedValue, toggleChecked] = useControlInput();
-  const [message, updateMessage] = useControlInput();
+  const [checkedValue, toggleChecked, resetChecked] = useControlInput('notice');
+  const [message, updateMessage, resetMessage] = useControlInput();
   const [isToastOpen, setIsToastOpen] = React.useState(false);
+  const [toasts, setToasts] = React.useState<ToastList[]>([]);
+
+  function updateToast() {
+    const newToast: ToastList = {
+      id: crypto.randomUUID(),
+      message: message,
+      variant: checkedValue,
+    }
+
+    setToasts((currentToasts) => {
+      const nextToast = [...currentToasts, newToast];
+      console.log(nextToast);
+
+      return nextToast;
+    });
+  }
 
   return (
     <div className={styles.wrapper}>
@@ -23,10 +47,11 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      {isToastOpen && (
-        <Toast 
-          message={message} 
-          status={checkedValue} 
+      {toasts.length > 0 && (
+        <ToastShelf 
+          item={toasts}
+          // message={message} 
+          // variant={checkedValue} 
           isOpen={isToastOpen} 
           toggleIsOpen={setIsToastOpen} 
         />
@@ -36,7 +61,10 @@ function ToastPlayground() {
         className={styles.controlsWrapper}
         onSubmit={(event) => {
           event.preventDefault();
-          setIsToastOpen(!isToastOpen);
+          // setIsToastOpen(!isToastOpen);
+          updateToast();
+          resetChecked();
+          resetMessage();
         }}
       >
         <div className={styles.row}>
