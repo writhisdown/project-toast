@@ -7,7 +7,7 @@ import styles from './ToastShelf.module.css';
 
 type ToastShelfProps = {item: ToastList[]} & ToastToggle;
 
-function ToastShelf({ item, isOpen, toggleIsOpen } : ToastShelfProps) {
+function ToastShelf({ item, handleDismiss } : ToastShelfProps) {
   return (
     <ol className={styles.wrapper}>
       {item.map(({id, message, variant}) => {
@@ -16,11 +16,11 @@ function ToastShelf({ item, isOpen, toggleIsOpen } : ToastShelfProps) {
             key={id}
             className={styles.toastWrapper}
           >
-            <Toast 
+            <Toast
+              id={id}
               message={message} 
-              variant={variant} 
-              isOpen={isOpen} 
-              toggleIsOpen={toggleIsOpen} 
+              variant={variant}
+              handleDismiss={handleDismiss}
             />
           </li>
         );

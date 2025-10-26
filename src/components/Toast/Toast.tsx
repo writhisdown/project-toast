@@ -8,7 +8,7 @@ import {
   X as Close,
 } from 'react-feather';
 
-import type { ToastContent, ToastToggle } from '@/types/ToastTypes';
+import type { ToastContent, ToastId, ToastToggle } from '@/types/ToastTypes';
 
 import VisuallyHidden from '../VisuallyHidden';
 import ToastIcon from './ToastIcon';
@@ -22,15 +22,11 @@ const ICONS_BY_VARIANT = {
   error: AlertOctagon,
 };
 
-type ToastProps = ToastContent & ToastToggle;
+type ToastProps = ToastId & ToastContent & ToastToggle;
 
-function Toast({message, variant, isOpen, toggleIsOpen} : ToastProps) {
+function Toast({id, message, variant, handleDismiss} : ToastProps) {
 
   const iconVariant = variant as keyof typeof ICONS_BY_VARIANT;
-
-  function handleDismiss() {
-    toggleIsOpen(!isOpen);
-  }
 
   return (
     <div 
@@ -48,10 +44,10 @@ function Toast({message, variant, isOpen, toggleIsOpen} : ToastProps) {
       </p>
       <button 
         className={styles.closeButton}
-        onClick={handleDismiss}
+        onClick={() => handleDismiss(id)}
       >
         <ToastIcon icon={Close} />
-        <VisuallyHidden>toggleIsOpen message</VisuallyHidden>
+        <VisuallyHidden>dismiss toast message</VisuallyHidden>
       </button>
     </div>
   );

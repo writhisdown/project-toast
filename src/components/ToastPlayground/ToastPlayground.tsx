@@ -13,19 +13,12 @@ import styles from './ToastPlayground.module.css';
 
 const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 
-// type Toasts = {
-//   id: string,
-//   message: string | undefined,
-//   variant: string | undefined,
-// }
-
 function ToastPlayground() {
   const [checkedValue, toggleChecked, resetChecked] = useControlInput('notice');
   const [message, updateMessage, resetMessage] = useControlInput();
-  const [isToastOpen, setIsToastOpen] = React.useState(false);
   const [toasts, setToasts] = React.useState<ToastList[]>([]);
 
-  function updateToast() {
+  function handleToast() {
     const newToast: ToastList = {
       id: crypto.randomUUID(),
       message: message,
@@ -40,6 +33,18 @@ function ToastPlayground() {
     });
   }
 
+  function handleDismiss(selected: string) {
+    const index = toasts.findIndex((toast) => {
+      if (toast.id === selected) {
+        return toast;
+      }
+    });
+
+    const nextToast = [...toasts.slice(0, index), ...toasts.slice(index + 1)];
+
+    setToasts(nextToast);
+  }
+
   return (
     <div className={styles.wrapper}>
       <header>
@@ -50,10 +55,7 @@ function ToastPlayground() {
       {toasts.length > 0 && (
         <ToastShelf 
           item={toasts}
-          // message={message} 
-          // variant={checkedValue} 
-          isOpen={isToastOpen} 
-          toggleIsOpen={setIsToastOpen} 
+          handleDismiss={handleDismiss}
         />
       )}
 
@@ -61,8 +63,7 @@ function ToastPlayground() {
         className={styles.controlsWrapper}
         onSubmit={(event) => {
           event.preventDefault();
-          // setIsToastOpen(!isToastOpen);
-          updateToast();
+          handleToast();
           resetChecked();
           resetMessage();
         }}
