@@ -8,7 +8,9 @@ import {
   X as Close,
 } from 'react-feather';
 
-import type { ToastContent, ToastId, ToastToggle } from '@/types/ToastTypes';
+import type { ToastContent, ToastId } from '@/types/ToastTypes';
+
+import { ToastContext } from '@/providers/ToastProvider/ToastProvider';
 
 import VisuallyHidden from '../VisuallyHidden';
 import ToastIcon from './ToastIcon';
@@ -22,10 +24,14 @@ const ICONS_BY_VARIANT = {
   error: AlertOctagon,
 };
 
-type ToastProps = ToastId & ToastContent & ToastToggle;
+type ToastProps = ToastId & ToastContent;
 
-function Toast({id, message, variant, handleDismiss} : ToastProps) {
+function Toast({id, message, variant} : ToastProps) {
+  const {handleDismiss} = React.useContext(ToastContext);
 
+  console.log(id)
+
+  // Reference https://www.totaltypescript.com/concepts/type-string-cannot-be-used-to-index-type
   const iconVariant = variant as keyof typeof ICONS_BY_VARIANT;
 
   return (
@@ -44,7 +50,12 @@ function Toast({id, message, variant, handleDismiss} : ToastProps) {
       </p>
       <button 
         className={styles.closeButton}
-        onClick={() => handleDismiss(id)}
+        onClick={() => {
+          // console.log('toast id:', toast.id);
+          console.log('selected id:', id);
+
+          handleDismiss(id)
+        }}
       >
         <ToastIcon icon={Close} />
         <VisuallyHidden>dismiss toast message</VisuallyHidden>
@@ -53,4 +64,4 @@ function Toast({id, message, variant, handleDismiss} : ToastProps) {
   );
 }
 
-export default Toast;
+export default React.memo(Toast);

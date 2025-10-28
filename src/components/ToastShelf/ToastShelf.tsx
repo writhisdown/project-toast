@@ -1,16 +1,17 @@
 import React from 'react';
 
-import type { ToastList, ToastToggle } from '@/types/ToastTypes';
+import { ToastContext } from '@/providers/ToastProvider/ToastProvider';
 
 import Toast from '../Toast';
 import styles from './ToastShelf.module.css';
 
-type ToastShelfProps = {item: ToastList[]} & ToastToggle;
-
-function ToastShelf({ item, handleDismiss } : ToastShelfProps) {
+function ToastShelf() {
+  const {toasts} = React.useContext(ToastContext);
+  
   return (
+
     <ol className={styles.wrapper}>
-      {item.map(({id, message, variant}) => {
+      {toasts?.map(({id, message, variant}) => {
         return (
           <li 
             key={id}
@@ -20,7 +21,6 @@ function ToastShelf({ item, handleDismiss } : ToastShelfProps) {
               id={id}
               message={message} 
               variant={variant}
-              handleDismiss={handleDismiss}
             />
           </li>
         );
@@ -29,4 +29,4 @@ function ToastShelf({ item, handleDismiss } : ToastShelfProps) {
   );
 }
 
-export default ToastShelf;
+export default React.memo(ToastShelf);

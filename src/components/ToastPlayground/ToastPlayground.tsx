@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type { ToastList } from '@/types/ToastTypes';
+import { ToastContext } from '@/providers/ToastProvider/ToastProvider';
 
 import useControlInput from '@/hooks/useControlInput';
 
@@ -16,33 +16,20 @@ const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 function ToastPlayground() {
   const [checkedValue, toggleChecked, resetChecked] = useControlInput('notice');
   const [message, updateMessage, resetMessage] = useControlInput();
-  const [toasts, setToasts] = React.useState<ToastList[]>([]);
+  const {toasts, handleToast} = React.useContext(ToastContext);
 
-  function handleToast() {
-    const newToast: ToastList = {
-      id: crypto.randomUUID(),
-      message: message,
-      variant: checkedValue,
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+
+    // TODO: Add error message when form is submitted
+    // while the textarea message is an empty string
+    if (message === '') {
+      return;
     }
 
-    setToasts((currentToasts) => {
-      const nextToast = [...currentToasts, newToast];
-      console.log(nextToast);
-
-      return nextToast;
-    });
-  }
-
-  function handleDismiss(selected: string) {
-    const index = toasts.findIndex((toast) => {
-      if (toast.id === selected) {
-        return toast;
-      }
-    });
-
-    const nextToast = [...toasts.slice(0, index), ...toasts.slice(index + 1)];
-
-    setToasts(nextToast);
+    handleToast(message, checkedValue);
+    resetChecked();
+    resetMessage();
   }
 
   return (
@@ -53,20 +40,12 @@ function ToastPlayground() {
       </header>
 
       {toasts.length > 0 && (
-        <ToastShelf 
-          item={toasts}
-          handleDismiss={handleDismiss}
-        />
+        <ToastShelf />
       )}
 
       <form 
         className={styles.controlsWrapper}
-        onSubmit={(event) => {
-          event.preventDefault();
-          handleToast();
-          resetChecked();
-          resetMessage();
-        }}
+        onSubmit={handleSubmit}
       >
         <div className={styles.row}>
           <TextArea message={message} updateMessage={updateMessage} />
@@ -104,4 +83,4 @@ function ToastPlayground() {
   );
 }
 
-export default ToastPlayground;
+export default React.memo(ToastPlayground);
