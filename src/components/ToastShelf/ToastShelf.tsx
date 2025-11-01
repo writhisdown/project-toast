@@ -2,15 +2,23 @@ import React from 'react';
 
 import { ToastContext } from '@/providers/ToastProvider/ToastProvider';
 
+import useEscapeKey from '@/hooks/useEscapeKey';
+
 import Toast from '../Toast';
 import styles from './ToastShelf.module.css';
 
 function ToastShelf() {
-  const {toasts} = React.useContext(ToastContext);
+  const {toasts, handleDismissAll} = React.useContext(ToastContext);
+
+  useEscapeKey(handleDismissAll);
   
   return (
-
-    <ol className={styles.wrapper}>
+    <ol
+      role="region"
+      aria-live="polite"
+      aria-label='Notification'
+      className={styles.wrapper}
+    >
       {toasts?.map(({id, message, variant}) => {
         return (
           <li 

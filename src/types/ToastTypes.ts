@@ -12,8 +12,9 @@ export type ToastList = Spread<ToastId & ToastContent>;
 
 export type ToastProviderContext = {
   toasts: ToastList[],
-  handleToast: (message?: string, variant?: string) => void,
+  handleNewToast: (message?: string, variant?: string) => void,
   handleDismiss: (selected: string) => void,
+  handleDismissAll: () => void,
 }
 
 

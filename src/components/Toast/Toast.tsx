@@ -36,8 +36,6 @@ function Toast({id, message, variant} : ToastProps) {
 
   return (
     <div 
-      role="region"
-      aria-live="polite"
       className={`${styles.toast} ${styles[`${variant}`]}`}
     >
       <div className={styles.iconContainer}>
@@ -46,19 +44,16 @@ function Toast({id, message, variant} : ToastProps) {
         />
       </div>
       <p className={styles.content}>
+        <VisuallyHidden>{variant} -</VisuallyHidden>
         {message}
       </p>
-      <button 
+      <button
         className={styles.closeButton}
-        onClick={() => {
-          // console.log('toast id:', toast.id);
-          console.log('selected id:', id);
-
-          handleDismiss(id)
-        }}
+        aria-label='dismiss message'
+        aria-live='off'
+        onClick={() => handleDismiss(id)}
       >
         <ToastIcon icon={Close} />
-        <VisuallyHidden>dismiss toast message</VisuallyHidden>
       </button>
     </div>
   );

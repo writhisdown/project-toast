@@ -13,7 +13,7 @@ export const ToastContext = React.createContext<ToastProviderContext>({} as Toas
 function ToastProvider({children} : ToastProviderProps) {
   const [toasts, setToasts] = React.useState<ToastList[]>([]);
 
-  const handleToast = React.useCallback((message?: string, variant?: string) => {
+  const handleNewToast = React.useCallback((message?: string, variant?: string) => {
     const newToast: ToastList = {
       id: crypto.randomUUID(),
       message: message,
@@ -40,7 +40,11 @@ function ToastProvider({children} : ToastProviderProps) {
     setToasts(nextToast);
   }, [toasts]);
 
-  const value = {toasts, handleToast, handleDismiss};
+  const handleDismissAll = React.useCallback(() => {
+    setToasts([]);
+  }, []);
+
+  const value = {toasts, handleNewToast, handleDismiss, handleDismissAll};
   
   return (
     <ToastContext.Provider value={value}>

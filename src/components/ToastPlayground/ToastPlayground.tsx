@@ -8,6 +8,7 @@ import Button from '../Button';
 import TextArea from '../TextArea';
 import RadioInput from '../RadioInput';
 import ToastShelf from '../ToastShelf';
+import ErrorMessage from '../ErrorMessage';
 
 import styles from './ToastPlayground.module.css';
 
@@ -16,18 +17,22 @@ const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 function ToastPlayground() {
   const [checkedValue, toggleChecked, resetChecked] = useControlInput('notice');
   const [message, updateMessage, resetMessage] = useControlInput();
-  const {toasts, handleToast} = React.useContext(ToastContext);
+  const {toasts, handleNewToast} = React.useContext(ToastContext);
+  const [isError, setIsError] = React.useState(false);
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
     // TODO: Add error message when form is submitted
     // while the textarea message is an empty string
+    // refactor to remove setter redundancy.
     if (message === '') {
+      setIsError(!isError);
       return;
     }
-
-    handleToast(message, checkedValue);
+    
+    setIsError(!isError);
+    handleNewToast(message, checkedValue);
     resetChecked();
     resetMessage();
   }
@@ -48,7 +53,11 @@ function ToastPlayground() {
         onSubmit={handleSubmit}
       >
         <div className={styles.row}>
-          <TextArea message={message} updateMessage={updateMessage} />
+          <TextArea
+            style={isError ? {"--has-error": 'var(--color-error)'} : {}}
+            message={message} 
+            updateMessage={updateMessage} 
+          />
         </div>
 
         <fieldset className={styles.row}>
@@ -76,6 +85,7 @@ function ToastPlayground() {
             className={`${styles.inputWrapper} ${styles.radioWrapper}`}
           >
             <Button>Pop Toast!</Button>
+            <ErrorMessage showError={isError}>Please enter a message</ErrorMessage>
           </div>
         </div>
       </form>

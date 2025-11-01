@@ -7,7 +7,7 @@ type TextAreaProps = React.InputHTMLAttributes<HTMLTextAreaElement> & {
   updateMessage: (event: React.ChangeEvent | undefined) => void,
 }
 
-function TextArea({message, updateMessage}: TextAreaProps) {
+function TextArea({message, updateMessage, ...rest}: TextAreaProps) {
   const id = React.useId();
 
   console.log({message})
@@ -23,6 +23,7 @@ function TextArea({message, updateMessage}: TextAreaProps) {
       </label>
       <div className={styles.inputWrapper}>
         <textarea 
+          {...rest}
           id={id} 
           className={styles.messageInput} 
           value={message}
