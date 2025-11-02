@@ -23,15 +23,13 @@ function ToastPlayground() {
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
-    // TODO: Add error message when form is submitted
-    // while the textarea message is an empty string
-    // refactor to remove setter redundancy.
     if (message === '') {
       setIsError(!isError);
       return;
+    } else {
+      setIsError(false);
     }
     
-    setIsError(!isError);
     handleNewToast(message, checkedValue);
     resetChecked();
     resetMessage();
